@@ -10,7 +10,7 @@ class StaticHandler(tornado.web.StaticFileHandler):
         self.xsrf_token
 
 
-class StudentHandler(RequestHandler):
+class Student1Handler(RequestHandler):
     def on_response(self,response):
         if response.error:
             self.send_error(500)
@@ -36,3 +36,20 @@ class StudentHandler(RequestHandler):
 class HomeHandler(RequestHandler):
     def get(self, *args, **kwargs):
         self.render('home.html')
+
+
+class Student2Handler(RequestHandler):
+    @tornado.gen.coroutine
+    def get(self, *args, **kwargs):
+        url = 'http://s.budejie.com/topic/tag-topic/64/hot/budejie-android-6.6.9/0-20.json?market=xiaomi&ver=6.6.9&visiting=&os=7.1.1&appname=baisibudejie&client=android&udid=863254032906009&mac=02%3A00%3A00%3A00%3A00%3A00'
+
+        # 创建客户端
+        client = AsyncHTTPClient()
+
+        res = yield client.fetch(url)
+
+        if res.error:
+            self.send_error(500)
+        else:
+            data = res.body
+            self.write(data)
